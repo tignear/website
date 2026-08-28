@@ -68,8 +68,7 @@ h2 { font-size: clamp(1.8rem, 4vw, 3.25rem); font-weight: 620; }
 h3 { font-size: 1.25rem; }
 
 .site-header { padding-block: 1.35rem; }
-.nav { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-.brand { font-size: 1.05rem; font-weight: 780; letter-spacing: -.04em; text-decoration: none; }
+.nav { display: flex; align-items: center; justify-content: flex-end; gap: 2rem; }
 .nav-links { display: flex; gap: clamp(1rem, 3vw, 2rem); margin: 0; padding: 0; list-style: none; }
 .nav-links a { color: var(--muted); font-size: .9rem; text-decoration: none; }
 .nav-links a[aria-current="page"], .nav-links a:hover { color: var(--text); }

@@ -20,7 +20,6 @@ const works = defineCollection({
     title: z.string(),
     description: z.string(),
     year: z.number(),
-    role: z.string(),
     stack: z.array(z.string()).default([]),
     url: z.url().optional(),
     repository: z.url().optional(),
