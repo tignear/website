@@ -5,5 +5,11 @@
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "tignear.com",
+      "custom_domain": true
+    }
+  ]
 }
