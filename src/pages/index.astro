@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+import SocialIcon from '../components/SocialIcon.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const date = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+---
+
+<BaseLayout>
+  <div class="home shell">
+    <aside class="home-profile">
+      <img
+        class="profile-icon"
+        src="https://avatars.githubusercontent.com/u/22989692?v=4&amp;s=640"
+        width="460"
+        height="460"
+        alt="tigのアイコン"
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
+      />
+      <div class="profile-identity">
+        <h1>tig / tignear</h1>
+      </div>
+      <nav class="profile-links" aria-label="外部プロフィール">
+        <a href={site.social.github} rel="me external"><SocialIcon name="github" />GitHub ↗</a>
+        <a href={site.social.twitter} rel="me external"><SocialIcon name="twitter" />Twitter ↗</a>
+        <a href={site.social.zenn} rel="me external"><SocialIcon name="zenn" />Zenn ↗</a>
+        <a href={site.social.discord} rel="me external"><SocialIcon name="discord" />Discord ↗</a>
+      </nav>
+      <a class="about-link" href="/about/">About / Projects →</a>
+    </aside>
+
+    <section class="notes-feed" id="notes" aria-labelledby="notes-title">
+      <header class="feed-head">
+        <h2 id="notes-title">Notes</h2>
+        <a href="/rss.xml">RSS ↗</a>
+      </header>
+      <ol class="article-list">
+        {posts.map((post) => (
+          <li>
+            <article>
+              <div class="article-date">
+                <time datetime={post.data.publishedAt.toISOString()}>{date.format(post.data.publishedAt)}</time>
+                {post.data.updatedAt && <span>Updated {date.format(post.data.updatedAt)}</span>}
+              </div>
+              <div class="article-summary">
+                <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+              </div>
+              <a class="article-arrow" href={`/blog/${post.id}/`} aria-label={`${post.data.title}を読む`}>→</a>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+</BaseLayout>

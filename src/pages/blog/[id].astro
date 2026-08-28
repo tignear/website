@@ -1,0 +1,30 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props { post: CollectionEntry<'blog'> }
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={`${post.data.title} — Tignear`} description={post.data.description} type="article">
+  <article>
+    <header class="article-head">
+      <div class="shell">
+        <p class="eyebrow">Blog{post.data.tags.length > 0 && <> / {post.data.tags.join(' · ')}</>}</p>
+        <h1>{post.data.title}</h1>
+        <div class="article-meta">
+          <time datetime={post.data.publishedAt.toISOString()}>公開 {date.format(post.data.publishedAt)}</time>
+          {post.data.updatedAt && <time datetime={post.data.updatedAt.toISOString()}>更新 {date.format(post.data.updatedAt)}</time>}
+        </div>
+      </div>
+    </header>
+    <div class="prose shell"><Content /></div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,21 @@
+{
+  "name": "tignear.com",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "astro": "^7.2.9"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.0.0"
+  }
+}

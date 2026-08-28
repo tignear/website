@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+import SocialIcon from '../components/SocialIcon.astro';
+
+const works = (await getCollection('works', ({ data }) => !data.draft))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year || b.data.order - a.data.order);
+---
+
+<BaseLayout title="About — tignear" description="tig / tignearのプロフィールとプロジェクト。">
+  <header class="about-head shell">
+    <div>
+      <img
+        class="about-avatar"
+        src="https://avatars.githubusercontent.com/u/22989692?v=4&amp;s=320"
+        width="460"
+        height="460"
+        alt="tigのアイコン"
+        loading="eager"
+        decoding="sync"
+      />
+      <p class="eyebrow">About</p>
+      <h1>tig / tignear</h1>
+    </div>
+    <p>Veryl向けのオープンEDAツール、Celox・Struo・TexoをRustで開発しています。CeloxではRTL解析、simulation kernel、Node.js / browser向けTypeScript APIを実装。Struoではlogic synthesisとformal equivalence、TexoではFPGA place-and-route、timing analysis、ECP5 bitstream生成を実装しています。</p>
+  </header>
+
+  <section class="about-section shell">
+    <h2>Profile</h2>
+    <dl class="profile-list">
+      <div><dt>Primary languages</dt><dd>Rust, TypeScript, C++</dd></div>
+      <div><dt>Domains</dt><dd>Compiler, RTL simulation, logic synthesis, formal verification, FPGA physical design</dd></div>
+      <div><dt>Execution targets</dt><dd>Celox: native x86-64 / AArch64, Node.js, WebAssembly · Struo / Texo: Lattice ECP5</dd></div>
+      <div>
+        <dt>Elsewhere</dt>
+        <dd class="social-links">
+          <a href={site.social.github} rel="me external"><SocialIcon name="github" />GitHub / @tignear ↗</a>
+          <a href={site.social.twitter} rel="me external"><SocialIcon name="twitter" />Twitter / @_tig_ ↗</a>
+          <a href={site.social.zenn} rel="me external"><SocialIcon name="zenn" />Zenn / @tig ↗</a>
+          <a href={site.social.discord} rel="me external"><SocialIcon name="discord" />Discord / tignear ↗</a>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="about-section shell" id="projects">
+    <h2>Projects</h2>
+    <ol class="work-list">
+      {works.map((work) => (
+        <li class="work-row">
+          <span class="number">{work.data.year}</span>
+          <div class="work-summary">
+            <h3>{work.data.title}</h3>
+            <p>{work.data.description}</p>
+          </div>
+          <div class="work-meta">
+            <span class="work-stack">{work.data.stack.slice(0, 3).join(' · ')}</span>
+            {(work.data.url || work.data.repository) && <span class="work-links">
+              {work.data.url && <a href={work.data.url} rel="external">Site ↗</a>}
+              {work.data.repository && <a href={work.data.repository} rel="external">GitHub ↗</a>}
+            </span>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>
