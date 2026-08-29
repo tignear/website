@@ -7,7 +7,7 @@ tags: [FPGA, EDA, nextpnr]
 
 nextpnr-ecp5のタイミング解析結果は、そのまま信用できない。
 
-ソースコードを追うと、配線遅延はminimumもmaximumも一律1.1倍で、routerはhold violationを修正しない。global clockの配線遅延は0になり、非同期clock間のtiming intentを記述する機能も実質的に使えない。
+nextpnr-ecp5では、minimumとmaximumの配線遅延が一律1.1倍される。routerはhold violationを修正しない。global clockの配線遅延は0として扱われ、非同期clock間のdatapath delayやbit間skewも制約できない。
 
 表示されたslackの計算条件と、その値から判断できる範囲が分からない。精度以前の問題である。
 
@@ -24,7 +24,7 @@ minimum delayとmaximum delayの両方を、文字どおり一律1.1倍してい
 
 maximum delayを10%増やせば、データが実際より遅く届くものとしてsetupを解析することになる。これは安全側である。
 
-しかし、minimum delayを10%増やすと話が逆になる。データが実際より遅く届くものとしてholdを解析することになり、見かけ上のhold slackは増える。この補正はviolationを見逃す方向に働く。minimum delayが負なら事情は変わるが、pip delayは非負最小二乗で生成されるため負にはならない。現在のECP5 databaseにある全speed grade、合計1,484件のpip class entryを確認しても負のminimum delayは0件だった。safety marginと呼ぶには向きが逆である。
+一方、minimum delayを10%増やすとhold slackは見かけ上増え、violationを見逃す方向に働く。現在のECP5 databaseにある1,484件のminimum delayはすべて非負なので、minimum側の1.1倍はsafety marginとは逆向きである。
 
 10%という値の根拠、すべてのpip classに同じ係数を使う妥当性、元のdatabaseが表すprocess、voltage、temperatureとの関係は、コードにもcommitにも説明されていない。
 
@@ -83,9 +83,7 @@ cross-domain pathの一覧には意味があるが、それだけでは安全性
 
 ## PASSの前提が不明確である
 
-表面上は必要な機能が一通り揃っているように見える。
-
-配線遅延のdatabaseはある。hold violationのreportもある。clock skewを計算する式も、cross-domain pathのreportもある。自分のrouterを書くためにnextpnrを参考にして、そこで気が付いてしまった。配線遅延には説明のない1.1が掛かり、routerはholdを修正せず、global clock delayは0で、非同期clock間のtiming intentを与える手段は実質的に存在しない。
+自分のrouterを書くためにnextpnrを参考にして、そこで気が付いてしまった。配線遅延には説明のない1.1が掛かり、routerはholdを修正せず、global clock delayは0で、非同期clock間のdatapath delayやbit間skewも制約できない。
 
 EDA toolがPASSを出す以上、実デバイスでその周波数を満たす見込みのある解析結果でなければ困る。仮定や未実装機能を説明して免責すれば済むとも思わない。粗い近似を使うとしても安全側に倒し、place and routeがtiming violationを実際に解消するところまで必要である。
 
