@@ -97,6 +97,7 @@ main { min-height: 70vh; }
 .article-list > li { border-bottom: 1px solid var(--line); }
 .article-list article { display: grid; grid-template-columns: 7rem minmax(0, 1fr) 1rem; gap: 1.5rem; padding-block: .9rem; }
 .article-date { display: flex; flex-direction: column; gap: .2rem; color: var(--muted); font-size: .72rem; }
+.article-source { color: var(--accent); font-weight: 650; }
 .article-summary h3 { margin: 0; font-size: 1.18rem; }
 .article-summary h3 a { text-decoration: none; }
 .article-arrow { color: var(--muted); text-decoration: none; }

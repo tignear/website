@@ -24,6 +24,8 @@ npm run preview
 - 制作実績: `src/content/works/` にMarkdownまたはMDXを追加
 - 名前・説明・連絡先: `src/site.config.ts`
 
+トップページのNotesには、`src/site.config.ts`の`externalPosts`で指定したZenn・Qiitaアカウントの記事もビルド時に取得し、公開日順で表示します。外部フィードを一時的に取得できない場合も、ローカルの記事だけでビルドを続行します。
+
 frontmatterは`src/content.config.ts`で検証されます。公開前の記事には`draft: true`を指定してください。変更をcommitしてGitHubへpushすると、Cloudflare側で自動ビルドできます。
 
 ## Cloudflare Workersへ公開する

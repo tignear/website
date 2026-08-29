@@ -3,9 +3,17 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../site.config';
 import SocialIcon from '../components/SocialIcon.astro';
+import { getExternalPosts } from '../lib/external-posts';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const localPosts = (await getCollection('blog', ({ data }) => !data.draft)).map((post) => ({
+  title: post.data.title,
+  url: `/blog/${post.id}/`,
+  publishedAt: post.data.publishedAt,
+  updatedAt: post.data.updatedAt,
+  source: undefined,
+}));
+const posts = [...localPosts, ...await getExternalPosts()]
+  .sort((a, b) => b.publishedAt.valueOf() - a.publishedAt.valueOf());
 const date = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
 ---
 
@@ -44,13 +52,14 @@ const date = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: '2-digit
           <li>
             <article>
               <div class="article-date">
-                <time datetime={post.data.publishedAt.toISOString()}>{date.format(post.data.publishedAt)}</time>
-                {post.data.updatedAt && <span>Updated {date.format(post.data.updatedAt)}</span>}
+                <time datetime={post.publishedAt.toISOString()}>{date.format(post.publishedAt)}</time>
+                {post.source && <span class="article-source">{post.source} ↗</span>}
+                {post.updatedAt && <span>Updated {date.format(post.updatedAt)}</span>}
               </div>
               <div class="article-summary">
-                <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+                <h3><a href={post.url} rel={post.source ? 'external' : undefined}>{post.title}</a></h3>
               </div>
-              <a class="article-arrow" href={`/blog/${post.id}/`} aria-label={`${post.data.title}を読む`}>→</a>
+              <a class="article-arrow" href={post.url} rel={post.source ? 'external' : undefined} aria-label={`${post.title}を読む`}>→</a>
             </article>
           </li>
         ))}

@@ -11,4 +11,8 @@ export const site = {
     zenn: 'https://zenn.dev/tig',
     discord: 'https://discord.com/users/408939071289688064',
   },
+  externalPosts: {
+    zenn: 'tig',
+    qiita: 'tignear',
+  },
 } as const;
