@@ -14,6 +14,7 @@ npm run dev
 本番相当の確認:
 
 ```sh
+npm test
 npm run build
 npm run preview
 ```
@@ -27,6 +28,29 @@ npm run preview
 トップページのNotesには、`src/site.config.ts`の`externalPosts`で指定したZenn・Qiitaアカウントの記事もビルド時に取得し、公開日順で表示します。外部フィードを一時的に取得できない場合も、ローカルの記事だけでビルドを続行します。
 
 frontmatterは`src/content.config.ts`で検証されます。公開前の記事には`draft: true`を指定してください。変更をcommitしてGitHubへpushすると、Cloudflare側で自動ビルドできます。
+
+## 記事に図を書く
+
+Markdownで `d2` コードブロックを書くと、開発時・ビルド時にSVGへ変換します。`npm install` だけで利用でき、D2 CLIの追加インストールは不要です。
+
+````markdown
+```d2 合成からbitstream生成までの流れ
+direction: right
+
+source: Veryl
+synthesis: 論理合成
+route: 配置配線
+output: bitstream
+
+source -> synthesis -> route -> output
+```
+````
+
+`d2` に続けて書いた説明文は図のキャプションと読み上げ用の名前になります。説明文は省略できます。サイトに合わせた配色、ダークモード、横長の図の横スクロールに対応しています。通常のコードブロックの表示は従来どおりです。
+
+図は静的なSVGとしてHTMLに埋め込むので、閲覧時にD2のJavaScriptやWASMをダウンロードしません。図内の欧文フォントは必要な文字だけSVGに埋め込みます。構文エラーは記事のファイル名とコードブロックの行番号を付けて報告し、ビルドを失敗させます。
+
+D2の書き方は[公式ドキュメント](https://d2lang.com/tour/intro/)、ブラウザでの試作は[Playground](https://play.d2lang.com/)を参照してください。
 
 ## Cloudflare Workersへ公開する
 
