@@ -27,7 +27,25 @@ npm run preview
 
 トップページのNotesには、`src/site.config.ts`の`externalPosts`で指定したZenn・Qiitaアカウントの記事もビルド時に取得し、公開日順で表示します。外部フィードを一時的に取得できない場合も、ローカルの記事だけでビルドを続行します。
 
-frontmatterは`src/content.config.ts`で検証されます。公開前の記事には`draft: true`を指定してください。変更をcommitしてGitHubへpushすると、Cloudflare側で自動ビルドできます。
+frontmatterは`src/content.config.ts`で検証されます。変更をcommitしてGitHubへpushすると、Cloudflare側で自動ビルドできます。
+
+### 下書きを非公開にする
+
+公開前の記事は、Markdownの先頭にあるfrontmatterに`draft: true`を指定します。
+
+```yaml
+---
+title: 執筆中の記事
+description: 記事の概要
+publishedAt: 2026-09-10
+tags: [essay]
+draft: true
+---
+```
+
+下書きはトップページのNotes・RSS・サイトマップに含まれず、記事ページも生成されないため、URLを直接開いても閲覧できません。`npm run dev`でも同様に非表示です。制作実績にも`draft: true`を指定すると、AboutのProjectsから除外されます。
+
+公開するときは`draft: false`にするか、`draft`の行を削除します。省略時は公開扱いです。
 
 ## 記事に図を書く
 

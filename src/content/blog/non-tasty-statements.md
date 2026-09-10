@@ -2,7 +2,7 @@
 title: すべてが平均化された味がしない文章について
 description: すべてが平均化された味がしない文章について
 publishedAt: 2026-09-07
-tags: [LLM]
+tags: [essay,LLM]
 ---
 
 ## 要約
